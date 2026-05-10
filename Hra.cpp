@@ -2,13 +2,33 @@
 #include <cmath>
 #include <cstdlib>
 using namespace std;
-string Zahajeni;
+string pokracovat;
 string jmeno;
+bool jmenoconfirm = 0;
 bool classconfirm = 0;
 int classvyber;
+string classjmeno;
+int hracmaxhp;
+int hrachp;
+int hracatk;
+int hracmaxmana;
+int hracmana;
+string hraczbran;
+int spell;
+bool spellunlock[3];
+string spellname[4];
+int level = 1;
+int experience = 0;
+int stage;
+int monsterID;
+string monstername[] = {"Slimak", "Troll", "Goblin", "Lupic"};
+bool bossfight = 0;
+bool pribehskip =0;
+int miniboss;
+string minibossname[] = {""};
 int main(){
     cout << "RPG HRA - HLAVNI MENU" << endl << "Zapiste cokoliv a stistknete Enter pro zahajeni hry.";
-    cin >> Zahajeni;
+    cin >> pokracovat;
     system ("cls");
     do {
     cout << "Vyberte si Classu" << endl << "1) Rytir" << endl << "2) Paladin" << endl << "3) Mag" << endl << "4) Lupic" << endl << "5) Lovec" << endl << "6) Assassin";
@@ -65,7 +85,7 @@ int main(){
             case 5:
             system ("cls");
             cout << "Lovec" << endl << "Lovec je ozbrojen s kusi, schopny zpusobit velke pozkozeni s utoky, ale potrebuje prebijet a dokaze utocit pouze po prebyti kuse.";
-            cout << endl << "Zivoty: 10" << endl << "Utok: 9" << endl << "Mana: 10" << endl << "Zbran: Kuse" << endl << "Zakladni schopnost: Rychla palba" << endl << "Vystrelte nekolik sipu davajici poskozeni." << endl;
+            cout << endl << "Zivoty: 10" << endl << "Utok: 9" << endl << "Mana: 10" << endl << "Zbran: Kuse" << endl << "Zakladni schopnost: Rychla Palba" << endl << "Vystrelte nekolik sipu davajici poskozeni." << endl;
             do {
             cout << "Potvrdit Vyber? (0 - Ne, 1 - Ano)";
             cin >> classconfirm;
@@ -91,5 +111,48 @@ int main(){
             cout << "Neplatna Hodnota, Zadejte Hodnotu 1-6";
             }
 }while (classvyber<1&&classvyber>6&&classconfirm==false);
+switch(classvyber) {
+    case 1: classjmeno = "Rytir"; hracmaxhp = 10; hrachp = 10; hracatk =3; hracmaxmana = 10; hracmana = 10; hraczbran = "Mec"; spellname[0] = "Dvojity Svih"; break;
+    case 2: classjmeno = "Paladin"; hracmaxhp = 20; hrachp = 20; hracatk =4; hracmaxmana = 5; hracmana = 5; hraczbran = "Kladivo"; spellname[0] = "Obrana"; break;
+    case 3: classjmeno = "Mag"; hracmaxhp = 6; hrachp = 6; hracatk =4; hracmaxmana = 20; hracmana = 20; hraczbran = "Hul"; spellname[0] = "Ohniva Koule"; break;
+    case 4: classjmeno = "Lupic"; hracmaxhp = 8; hrachp = 8; hracatk =3; hracmaxmana = 10; hracmana = 10; hraczbran = "Dyka"; spellname[0] = "Kradez"; break;
+    case 5: classjmeno = "Lovec"; hracmaxhp = 10; hrachp = 10; hracatk =9; hracmaxmana = 10; hracmana = 10; hraczbran = "Kuse"; spellname[0] = "Rychla Palba"; break;
+    case 6: classjmeno = "Assassin"; hracmaxhp = 8; hrachp = 8; hracatk =6; hracmaxmana = 10; hracmana = 10; hraczbran = "Dvojite Dyky"; spellname[0] = "Neviditelnost"; break;
+}
+do {
+cout << "Zadejte vase jmeno: "; cin >> jmeno;
+cout << jmeno << " je to takhle spravne? (0 - Ne, 1 - Ano)";
+cin >> jmenoconfirm;
+}while (jmenoconfirm==0);
+system("cls");
+do {
+cout << "Chcete si vyslechnou pribeh teto země? (0 - Ne 1 - Ano)";
+cin >> pribehskip;
+}while(pribehskip!=0&&pribehskip!=1);
+if (pribehskip==1) {
+system ("cls");
+cout << "(Zadejte cokoliv + enter pro pokracovani)" << endl << "Pred davnymi lety byvalo vsechno mirumilovne a klidne," << endl;
+cin >> pokracovat;
+system ("cls");
+cout << "(Zadejte cokoliv + enter pro pokracovani)" << endl << "bohuzel ale jednoho dne nastala katastrofa." << endl;
+system ("cls");
+cout << "(Zadejte cokoliv + enter pro pokracovani)" << endl << "Obloha se rozzarila a zdevastovala horu." << endl;
+cin >> pokracovat;
+system ("cls");
+cout << "(Zadejte cokoliv + enter pro pokracovani)" << endl << "Vsechno pobliz hory bylo pokryto ledem a nic nezbylo." << endl;
+cin >> pokracovat;
+system ("cls");
+cout << "(Zadejte cokoliv + enter pro pokracovani)" << endl << "Tim ale pribeh nekonci," << endl;
+cin >> pokracovat;
+system ("cls");
+cout << "(Zadejte cokoliv + enter pro pokracovani)" << endl << "Ledova kletba se zacala dale sirit a monstra se zacala objevovat a utocit na lidstvo." << endl;
+cin >> pokracovat;
+system ("cls");
+cout << "(Zadejte cokoliv + enter pro pokracovani)" << endl << "Kletba se pomalu, ale jiste blizi k dalsim vesnicim a pohlcuje lidstvo." << endl;
+cin >> pokracovat;
+system ("cls");
+cout << "(Zadejte cokoliv + enter pro pokracovani)" << endl << "Kdy se objevi hrdina co kletbu ukonci?" << endl;
+cin >> pokracovat;
+}
 return 0;
 }
