@@ -4,6 +4,7 @@
 using namespace std;
 string pokracovat;
 string jmeno;
+int input;
 bool jmenoconfirm = 0;
 bool classconfirm = 0;
 int classvyber;
@@ -26,6 +27,39 @@ bool bossfight = 0;
 bool pribehskip =0;
 int miniboss;
 string minibossname[] = {""};
+int armorlvl = 0;
+int armorupg[6][3] = {5, 1, 1,
+                      8, 1, 1,
+                      3, 1, 1,
+                      4, 1, 1,
+                      5, 1, 1,
+                      4, 1, 1};
+int stagecheck (int stage) {
+if (stage==1) { return 1;}
+if (stage==2) { return 2;}
+if (stage==3) { return 3;}
+if (stage==4) { return 4;}
+if (stage==5) { return 5;}
+};
+void statcheck(string jmeno, int maxhp, int hp, int atk, int maxmana, int mana, int zbran, int spell, bool spellunlock[3], string spellname, int level, int experience, int stage) {
+cout << "Jmeno: " << jmeno << endl;
+cout << "Stage: " << stage << endl;
+cout << "Level: " << level << endl << "Exp: " << experience << endl;
+cout << "Maximalni zivoty: " << maxhp << endl << "Zivoty: " << hp << endl;
+cout << "Utok: " << atk << endl;
+cout << "Maximalni mana: " << maxmana << endl << "Mana: " << mana << endl;
+cout << "Zbran: " << zbran << endl;
+cout << "Spelly: " << spellname[0] << endl;
+for (int i; i<=3; i++) {
+    if (spellunlock[i]==true) {
+        cout << spellname[i+1] << endl;
+    }
+}
+}
+int stage =1;
+int stagetype;
+bool odejit = 0;
+string stagename[] = {"Zacatecnicka vesnice", "Plane"};
 int main(){
     cout << "RPG HRA - HLAVNI MENU" << endl << "Zapiste cokoliv a stistknete Enter pro zahajeni hry.";
     cin >> pokracovat;
@@ -153,6 +187,14 @@ cin >> pokracovat;
 system ("cls");
 cout << "(Zadejte cokoliv + enter pro pokracovani)" << endl << "Kdy se objevi hrdina co kletbu ukonci?" << endl;
 cin >> pokracovat;
+system ("cls");
+stagetype = stagecheck(stage);
+if (stagetype==1) {
+    do {
+        cout << stagename << endl;
+        cout << "Co chcete podniknout ve vesnici?" << endl << "";
+    }while(odejit==0);
+}
 }
 return 0;
 }
