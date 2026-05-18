@@ -28,20 +28,23 @@ bool pribehskip =0;
 int miniboss;
 string minibossname[] = {""};
 int armorlvl = 0;
-int armorupg[6][3] = {5, 1, 1,
-                      8, 1, 1,
-                      3, 1, 1,
-                      4, 1, 1,
-                      5, 1, 1,
-                      4, 1, 1};
+int armorupg[6][3] = {{5, 1, 1},
+                      {8, 1, 1},
+                      {3, 1, 1},
+                      {4, 1, 1},
+                      {5, 1, 1},
+                      {4, 1, 1}};
+
 int stagecheck (int stage) {
-if (stage==1) { return 1;}
-if (stage==2) { return 2;}
-if (stage==3) { return 3;}
-if (stage==4) { return 4;}
-if (stage==5) { return 5;}
-};
-void statcheck(string jmeno, int maxhp, int hp, int atk, int maxmana, int mana, int zbran, int spell, bool spellunlock[3], string spellname, int level, int experience, int stage) {
+if (stage==1) {return 1;}
+else if (stage==2)  {return 2;}
+else if (stage==3)  {return 3;}
+else if (stage==4)  {return 4;}
+else if (stage==5)  {return 5;}
+else {return 0;}
+
+}
+void statcheck(string jmeno, int maxhp, int hp, int atk, int maxmana, int mana, string zbran, int spell, bool spellunlock[], string spellname[], int level, int experience, int stage) {
 cout << "Jmeno: " << jmeno << endl;
 cout << "Stage: " << stage << endl;
 cout << "Level: " << level << endl << "Exp: " << experience << endl;
@@ -56,11 +59,13 @@ for (int i; i<=3; i++) {
     }
 }
 }
-int stage =1;
-int stagetype;
+
+
 bool odejit = 0;
 string stagename[] = {"Zacatecnicka vesnice", "Plane"};
 int main(){
+    int stagetype;
+    int stage = 1;
     cout << "RPG HRA - HLAVNI MENU" << endl << "Zapiste cokoliv a stistknete Enter pro zahajeni hry.";
     cin >> pokracovat;
     system ("cls");
@@ -144,7 +149,7 @@ int main(){
             system ("cls");
             cout << "Neplatna Hodnota, Zadejte Hodnotu 1-6";
             }
-}while (classvyber<1&&classvyber>6&&classconfirm==false);
+}while (classvyber<1||classvyber>6&&classconfirm==false);
 switch(classvyber) {
     case 1: classjmeno = "Rytir"; hracmaxhp = 10; hrachp = 10; hracatk =3; hracmaxmana = 10; hracmana = 10; hraczbran = "Mec"; spellname[0] = "Dvojity Svih"; break;
     case 2: classjmeno = "Paladin"; hracmaxhp = 20; hrachp = 20; hracatk =4; hracmaxmana = 5; hracmana = 5; hraczbran = "Kladivo"; spellname[0] = "Obrana"; break;
@@ -160,7 +165,7 @@ cin >> jmenoconfirm;
 }while (jmenoconfirm==0);
 system("cls");
 do {
-cout << "Chcete si vyslechnou pribeh teto země? (0 - Ne 1 - Ano)";
+cout << "Chcete si vyslechnou pribeh teto zemì? (0 - Ne 1 - Ano)";
 cin >> pribehskip;
 }while(pribehskip!=0&&pribehskip!=1);
 if (pribehskip==1) {
@@ -188,13 +193,17 @@ system ("cls");
 cout << "(Zadejte cokoliv + enter pro pokracovani)" << endl << "Kdy se objevi hrdina co kletbu ukonci?" << endl;
 cin >> pokracovat;
 system ("cls");
+}
 stagetype = stagecheck(stage);
 if (stagetype==1) {
     do {
-        cout << stagename << endl;
+        cout << stagename[stage-1] << endl;
         cout << "Co chcete podniknout ve vesnici?" << endl << "";
+        cin >> input;
+        if (input==1) {
+            statcheck(jmeno, hracmaxhp, hrachp, hracatk, hracmaxmana, hracmana, hraczbran, spell, spellunlock, spellname, level, experience, stage);
+        }
     }while(odejit==0);
-}
 }
 return 0;
 }
