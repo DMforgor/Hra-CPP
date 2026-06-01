@@ -24,6 +24,10 @@ string spellname[4];
 int level = 1;
 int experience = 0;
 int stage;
+int vesnice;
+int inventory[64];
+int ItemID;
+string itemname[] = {"", "Léčivý lektvar", "Lektvar many", "Smíšený lektvar"};
 int monsterID;
 string monstername[] = {"Slimák", "Troll", "Goblin", "Lupič"};
 bool bossfight = 0;
@@ -31,6 +35,7 @@ bool pribehskip =0;
 int miniboss;
 string minibossname[] = {""};
 int armorlvl = 0;
+int weaponlvl = 0;
 int armorupg[6][3] = {{5, 1, 1},
                       {8, 1, 1},
                       {3, 1, 1},
@@ -38,7 +43,13 @@ int armorupg[6][3] = {{5, 1, 1},
                       {5, 1, 1},
                       {4, 1, 1}};
 int armorupgcost[3] = {20, 40, 60};
-
+int weaponupg[6][3] = {{2, 1, 1},
+                      {2, 1, 1},
+                      {3, 1, 1},
+                      {3, 1, 1},
+                      {4, 1, 1},
+                      {3, 1, 1}};
+int weaponupgcost[3] = {20, 40, 60};
 int stagecheck (int stage) {
 if (stage==1) {return 1;}
 else if (stage==2)  {return 2;}
@@ -66,8 +77,17 @@ for (int i; i<=3; i++) {
 cout << endl;
 }
 
-
+void additem(int inventory[],int vel, int item) {
+for (int i=0; i<vel; i++) {
+    if (inventory[i]==0) {
+        inventory[i] = item;
+        break;
+    }
+}
+}
 bool odejit = 0;
+bool canupgarmor =1;
+bool canupgweapon =1;
 string stagename[] = {"Začátečnická vesnice", "Pláně"};
 int main(){
     system("color 79");
@@ -75,7 +95,7 @@ int main(){
     SetConsoleCP(CP_UTF8);
     int stagetype;
     int stage = 1;
-    cout << "RPG HRA - HLAVNI MENU" << endl << "Zapište cokoliv a stistkněte Enter pro zahajení hry.";
+    cout << "RPG HRA - HLAVNI MENU" << endl << "Zapište cokoliv a stistkněte Enter pro zahájení hry.";
     cin >> pokracovat;
     system ("cls");
     do {
@@ -206,6 +226,7 @@ system ("cls");
 }
 stagetype = stagecheck(stage);
 if (stagetype==1) {
+        vesnice++;
     do {
         cout << stagename[stage-1] << endl;
         cout << "Co chcete podniknout ve vesnici?" << endl << "1) Vylepšit zbroj" << endl << "2) Zakoupit lektvary" << endl << "3) Uzdravit se" << endl << "4) Naučit se nový spell" << endl << "5) Zhlédnout staty" << endl << "6) Odejít" << endl;
@@ -215,16 +236,68 @@ if (stagetype==1) {
             system("cls");
             cout << "Chcete si vylepsit brnění nebo zbraň? (0 - brnění, 1 - zbraň)" << endl;
             cin >> input;
-            if (input==0) {
-                cout << "Chcete si vylepsit brnění za " << armorupgcost[armorlvl] << " zlatých? Životy se vám zvýší o " << armorupg[classvyber][armorlvl] << "." << endl;
-
-            }else if (input==1) {
-
+            if (input==0&&canupgarmor==1) {
+                do {
+                cout << "Chcete si vylepsit brnění za " << armorupgcost[armorlvl] << " zlatých? Životy se vám zvýší o " << armorupg[classvyber-1][armorlvl] << ". (0 - Ne, 1 - Ano)" << endl;
+                cin >> input;
+                if (input!=0&&input!=1) {
+                    cout << "Neplatná hodnota, zadejte hodnotu 0-1: " << endl;
+                }else if(input==1) {
+                if(gold>=armorupgcost[armorlvl])
+                    gold = gold-armorupgcost[armorlvl];
+                    hracmaxhp = hracmaxhp+armorupg[classvyber-1][armorlvl];
+                    hrachp = hrachp+armorupg[classvyber-1][armorlvl];
+                    canupgarmor = 0;
+                    cout << "Životy se vám zvýšili o " << armorupg[classvyber][armorlvl] << " teď máte " << gold << " zlaťáků." << endl;
+                    armorlvl++;
+                }else if(gold<armorupgcost[armorlvl]) {
+                    cout << "Nemáte dostatek zlaťáků, chybí vám " << armorupgcost[armorlvl]-gold << " zlaťáků.";
+                }
+                }while(input!=0&&input!=1);
+                }else if(input==0&&canupgarmor==0) {
+                    cout << "Brnění je zde už vyprodáno." << endl;
+            }else if (input==1&&canupgweapon==1) {
+             do {
+                cout << "Chcete si vylepsit zbraň za " << weaponupgcost[weaponlvl] << " zlatých? Útok se vám zvýší o " << weaponupg[classvyber-1][weaponlvl] << ". (0 - Ne, 1 - Ano)" << endl;
+                cin >> input;
+                if (input!=0&&input!=1) {
+                    cout << "Neplatná hodnota, zadejte hodnotu 0-1: " << endl;
+                }else if(input==1) {
+                if(gold>=weaponupgcost[weaponlvl])
+                    gold = gold-weaponupgcost[weaponlvl];
+                    hracatk = hracatk+weaponupg[classvyber-1][weaponlvl];
+                    canupgweapon = 0;
+                    cout << "Útok se vám zvýšil o " << weaponupg[classvyber][weaponlvl] << " teď máte " << gold << " zlaťáků." << endl;
+                    weaponlvl++;
+                }else if(gold<weaponupgcost[weaponlvl]) {
+                    cout << "Nemáte dostatek zlaťáků, chybí vám " << weaponupgcost[weaponlvl]-gold << " zlaťáků.";
+                }
+                }while(input!=0&&input!=1);
+                }else if(input==1&&canupgweapon==0) {
+                cout << "Zbraň je zde už vyprodána." << endl;
             }else {
             break;
             }
             break;
         case 2:
+            system("cls");
+            cout << "Jaké chcete zakoupit lektvary? (0 - Léčivý lektvar, 1 - Lektvar many, 2 - Smíšený lektvar)" << endl;
+            cin >> input;
+            if (input==0) {
+                    cout << "Chcete zakoupit léčivý lektvar za " << vesnice*10 << " zlaťáků? (Obnoví 40% životů (zaokrouhleno nahorů) (0 . Ne, 1 - Ano)";
+                    do {
+                        cin >> input;
+                        if (input!=0&&input!=1) {
+                            cout<< "Neplatná hodnota, zadejte hodnotu 0-1: " << endl;
+                        }else if(input==1&&gold>=vesnice*10) {
+                        gold = gold-vesnice*10;
+                        additem(inventory,64,1);
+                        cout << "Zakoupili jste léčivý lektvar za" << vesnice*10 << " zlaťáků. Teď máte " << gold << " Zlaťáků." << endl;
+                        }
+                    }while(input!=0&&input!=1);
+            }else {
+            break;
+            }
             break;
         case 3:
             break;
@@ -237,6 +310,8 @@ if (stagetype==1) {
             cin >> pokracovat;
             break;
         case 6:
+            cout << "Chcete opustit vesnici? (0 - Ne, 1 - Ano";
+            cin >> odejit;
             break;
         default:
             system ("cls");
