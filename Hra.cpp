@@ -227,6 +227,7 @@ system ("cls");
 stagetype = stagecheck(stage);
 if (stagetype==1) {
         vesnice++;
+        odejit=0;
     do {
         cout << stagename[stage-1] << endl;
         cout << "Co chcete podniknout ve vesnici?" << endl << "1) Vylepšit zbroj" << endl << "2) Zakoupit lektvary" << endl << "3) Uzdravit se" << endl << "4) Naučit se nový spell" << endl << "5) Zhlédnout staty" << endl << "6) Odejít" << endl;
@@ -251,7 +252,7 @@ if (stagetype==1) {
                     cout << "Životy se vám zvýšili o " << armorupg[classvyber][armorlvl] << " teď máte " << gold << " zlaťáků." << endl;
                     armorlvl++;
                 }else if(gold<armorupgcost[armorlvl]) {
-                    cout << "Nemáte dostatek zlaťáků, chybí vám " << armorupgcost[armorlvl]-gold << " zlaťáků.";
+                    cout << "Nemáte dostatek zlaťáků, chybí vám " << armorupgcost[armorlvl]-gold << " zlaťáků." << endl;
                 }
                 }while(input!=0&&input!=1);
                 }else if(input==0&&canupgarmor==0) {
@@ -270,7 +271,7 @@ if (stagetype==1) {
                     cout << "Útok se vám zvýšil o " << weaponupg[classvyber][weaponlvl] << " teď máte " << gold << " zlaťáků." << endl;
                     weaponlvl++;
                 }else if(gold<weaponupgcost[weaponlvl]) {
-                    cout << "Nemáte dostatek zlaťáků, chybí vám " << weaponupgcost[weaponlvl]-gold << " zlaťáků.";
+                    cout << "Nemáte dostatek zlaťáků, chybí vám " << weaponupgcost[weaponlvl]-gold << " zlaťáků." << endl;
                 }
                 }while(input!=0&&input!=1);
                 }else if(input==1&&canupgweapon==0) {
@@ -284,7 +285,7 @@ if (stagetype==1) {
             cout << "Jaké chcete zakoupit lektvary? (0 - Léčivý lektvar, 1 - Lektvar many, 2 - Smíšený lektvar)" << endl;
             cin >> input;
             if (input==0) {
-                    cout << "Chcete zakoupit léčivý lektvar za " << vesnice*10 << " zlaťáků? (Obnoví 40% životů (zaokrouhleno nahorů) (0 . Ne, 1 - Ano)";
+                    cout << "Chcete zakoupit léčivý lektvar za " << vesnice*10 << " zlaťáků? (Obnoví 40% životů (zaokrouhleno nahorů) (0 . Ne, 1 - Ano)" << endl;;
                     do {
                         cin >> input;
                         if (input!=0&&input!=1) {
@@ -293,6 +294,36 @@ if (stagetype==1) {
                         gold = gold-vesnice*10;
                         additem(inventory,64,1);
                         cout << "Zakoupili jste léčivý lektvar za" << vesnice*10 << " zlaťáků. Teď máte " << gold << " Zlaťáků." << endl;
+                        }else if(input==1&&gold<vesnice*10) {
+                        cout << "Nemáte dostatek zlaťáků, chybí vám " << vesnice*10-gold << " zlaťáků." << endl;
+                        }
+                    }while(input!=0&&input!=1);
+            }else if(input==1){
+                cout << "Chcete zakoupit lektvar many za " << vesnice*10 << " zlaťáků? (Obnoví 60% many (zaokrouhleno nahorů) (0 . Ne, 1 - Ano)" << endl;;
+                                do {
+                        cin >> input;
+                        if (input!=0&&input!=1) {
+                            cout<< "Neplatná hodnota, zadejte hodnotu 0-1: " << endl;
+                        }else if(input==1&&gold>=vesnice*10) {
+                        gold = gold-vesnice*10;
+                        additem(inventory,64,2);
+                        cout << "Zakoupili jste lektvar many za" << vesnice*10 << " zlaťáků. Teď máte " << gold << " Zlaťáků." << endl;
+                        }else if(input==1&&gold<vesnice*10) {
+                        cout << "Nemáte dostatek zlaťáků, chybí vám " << vesnice*10-gold << " zlaťáků." << endl;
+                        }
+                    }while(input!=0&&input!=1);
+            }else if(input==2){
+                cout << "Chcete zakoupit smíšený lektvar za " << vesnice*10 << " zlaťáků? (Obnoví 30% životů a 40% many (zaokrouhleno nahorů) (0 . Ne, 1 - Ano)" << endl;
+                                do {
+                        cin >> input;
+                        if (input!=0&&input!=1) {
+                            cout<< "Neplatná hodnota, zadejte hodnotu 0-1: " << endl;
+                        }else if(input==1&&gold>=vesnice*10) {
+                        gold = gold-vesnice*10;
+                        additem(inventory,64,3);
+                        cout << "Zakoupili jste lektvar many za" << vesnice*10 << " zlaťáků. Teď máte " << gold << " Zlaťáků." << endl;
+                        }else if(input==1&&gold<vesnice*10) {
+                        cout << "Nemáte dostatek zlaťáků, chybí vám " << vesnice*10-gold << " zlaťáků." << endl;
                         }
                     }while(input!=0&&input!=1);
             }else {
@@ -300,8 +331,149 @@ if (stagetype==1) {
             }
             break;
         case 3:
+            system("cls");
+            cout << "Chcete se uzdravit za " << vesnice*8 << " zlaťáků? (Obnoví všechny životy a manu) (0 - Ne, 1 - Ano)" << endl;
+            cin >> input;
+            if(input==1&&gold>=vesnice*8&&(hrachp!=hracmaxhp||hracmana!=hracmaxmana)) {
+                hrachp=hracmaxhp;
+                hracmana = hracmaxmana;
+                cout << "Byli jste uzdraveni a vaše životy a mana byly obnoveny. Teď máte " << gold << endl << " zlaťáků." << endl;
+            }else if(input==1&&hrachp==hracmaxhp&&hracmana==hracmaxmana) {
+                cout << "Životy i manu už máte plné." << endl;
+            }else if(input==1&&gold<vesnice*8){
+                cout << "Nemáte dostatek zlaťáků, chybí vám " << vesnice*8-gold << " zlaťáků." << endl;
+            }else {
+                break;
+            }
             break;
         case 4:
+            system("cls");
+            cout << "Chcete se naučit nový spell za " << vesnice*15 << " zlaťáků? (0 - Ne, 1 - Ano)" << endl;
+            cin >> input;
+            if (input==1&&gold>=vesnice*15&&spellunlock[vesnice-1]==false) {
+            if(vesnice==1){
+                switch(classvyber) {
+            case 1:
+                cout << "Rytířská obrana - švihněte mečem na nepřítele a zmenčete poškození na další kola." << endl;
+                spellunlock[0]=true;
+                spellname[1] = "Rytířská obrana";
+                gold = gold-15;
+                break;
+            case 2:
+                cout << "Svaté kladivo - uhoďte nepřítele a získejte zpátky pár životů." << endl;
+                spellunlock[0]=true;
+                spellname[1] = "Svaté kladivo";
+                gold = gold-15;
+                break;
+            case 3:
+                cout << "Bleskové zaklínadlo - sežehněte nepřitele bleskem." << endl;
+                spellunlock[0]=true;
+                spellname[1] = "Bleskové zaklínadlo";
+                gold = gold-15;
+                break;
+            case 4:
+                cout << "Zlatá dýka - rízněte nepřítele s útokem, který dává poškození podle počtu zlaťáků." << endl;
+                spellunlock[0]=true;
+                spellname[1] = "Zlatá dýka";
+                gold = gold-15;
+                break;
+            case 5:
+                cout << "Přebíjecí střela - střelte po nepřítely a nabíjte normální útok." << endl;
+                spellunlock[0]=true;
+                spellname[1] = "Přebíjecí střela";
+                gold = gold-15;
+                break;
+            case 6:
+                cout << "Útok ze stínů - zaútočte na nepřítele, davá větší poškození pokud jste neviditelní ale zruší jí." << endl;
+                spellunlock[0]=true;
+                spellname[1] = "Útok ze stínů";
+                break;
+                }}
+            if(vesnice==2){
+                switch(classvyber) {
+            case 1:
+                cout << "Posílení - švihněte na nepřátele a zvyšte svůj útok." << endl;
+                spellunlock[1]=true;
+                spellname[2] = "Posílení";
+                gold = gold-30;
+                break;
+            case 2:
+                cout << "Oživení - získejte zpátky nějaké životy." << endl;
+                spellunlock[1]=true;
+                spellname[2] = "Oživení";
+                gold = gold-30;
+                break;
+            case 3:
+                cout << "Magické posílení - zvyšte svůj útok a poškození zaklínadel." << endl;
+                spellunlock[1]=true;
+                spellname[2] = "Magické posílení";
+                gold = gold-30;
+                break;
+            case 4:
+                cout << "Hod dýkou - hoďte svou dýku po nepřátely." << endl;
+                spellunlock[1]=true;
+                spellname[2] = "Hod dýkou";
+                gold = gold-30;
+                break;
+            case 5:
+                cout << "Déšť šipů - vystřelte několik šipů do oblak, které poškodí nepřítele, jakmile spadnou." << endl;
+                spellunlock[1]=true;
+                spellname[2] = "Déšť šípů";
+                gold = gold-30;
+                break;
+            case 6:
+                cout << "Otrávení - otravte nepřítele." << endl;
+                spellunlock[1]=true;
+                spellname[2] = "Otrávení";
+                gold = gold-30;
+                break;
+                }}
+            if(vesnice==3){
+                switch(classvyber) {
+            case 1:
+                cout << "Svatý meč - Zasáhněte nepřátele silným paprskem světla." << endl;
+                spellunlock[2]=true;
+                spellname[3] = "Svatý meč";
+                gold = gold-45;
+                break;
+            case 2:
+                cout << "Kladivo života - Zasáhněte nepřátele kladivem, poškození roste s životama." << endl;
+                spellunlock[2]=true;
+                spellname[3] = "Kladivo života";
+                gold = gold-45;
+                break;
+            case 3:
+                cout << "Meteorové zasáhnutí - Zasáhněte nepřátele silným meteorem." << endl;
+                spellunlock[2]=true;
+                spellname[3] = "Meteorové zasáhnutí";
+                gold = gold-45;
+                break;
+            case 4:
+                cout << "Zlatá střela - Sestřelte nepřátele se svou bambitkou, dává velké poškození, které se zvětšuje se zlaťáky, ale sebere polovinu vlastněných zlaťáků." << endl;
+                spellunlock[2]=true;
+                spellname[3] = "Zlatá střela";
+                gold = gold-45;
+                break;
+            case 5:
+                cout << "Průrazný šíp - Střelte po nepřátely šíp, který dává velké poškození." << endl;
+                spellunlock[2]=true;
+                spellname[3] = "Průrazný šíp";
+                gold = gold-45;
+                break;
+            case 6:
+                cout << "Rudá čepel - Přesekněte nepřátele a dejte velké poškození, dává větší poškození v neviditelnosti a otráveným nepřátelům." << endl;;
+                spellunlock[2]=true;
+                spellname[3] = "Rudá čepel";
+                gold = gold-45;
+                break;
+                }}
+            }else if(input==1&&spellunlock[vesnice-1]==true){
+                cout << "Tady jste se spell už naučili." << endl;
+            }else if(input==1&&gold<vesnice*15){
+                cout << "Nemáte dost zlaťáků, chybí vám " << vesnice*15-gold << " zlaťáků." << endl;
+            }else {
+            break;
+            }
             break;
         case 5:
             system("cls");
@@ -310,8 +482,11 @@ if (stagetype==1) {
             cin >> pokracovat;
             break;
         case 6:
-            cout << "Chcete opustit vesnici? (0 - Ne, 1 - Ano";
-            cin >> odejit;
+            cout << "Chcete opustit vesnici? (0 - Ne, 1 - Ano)" << endl;
+            cin >> input;
+            if (input==1) {
+                odejit = 1;
+            }
             break;
         default:
             system ("cls");
