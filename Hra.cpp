@@ -3,10 +3,15 @@
 #include <cstdlib>
 #include <windows.h>
 #include <string>
+#include <ctime>
 using namespace std;
 string pokracovat;
 string jmeno;
 int input;
+bool gameover;
+bool win;
+bool fight =true;
+bool loveccanatk =1;
 bool jmenoconfirm = 0;
 bool classconfirm = 0;
 int classvyber;
@@ -29,33 +34,52 @@ int inventory[64];
 int ItemID;
 string itemname[] = {"", "Léčivý lektvar", "Lektvar many", "Smíšený lektvar"};
 int monsterID;
+int monsterID2;
+int monsterID3;
 string monstername[] = {"Slimák", "Troll", "Goblin", "Lupič"};
+int monstermaxhp[] = {6, 8, 9, 11};
+int monsteratk[] = {2, 2, 3, 3};
+int monsterhp1;
+int monsterhp2;
+int monsterhp3;
+int golddrop;
 bool bossfight = 0;
 bool pribehskip =0;
 int miniboss;
-string minibossname[] = {""};
+string minibossname[] = {"Zapomenutý rytíř", "Falešný hrdina"};
 int armorlvl = 0;
 int weaponlvl = 0;
-int armorupg[6][3] = {{5, 1, 1},
-                      {8, 1, 1},
-                      {3, 1, 1},
-                      {4, 1, 1},
-                      {5, 1, 1},
-                      {4, 1, 1}};
+int damagered;
+int atkbuff;
+int invis;
+int spellmanacost[6][4] = {{4, 4, 4, 30},
+                      {2, 5, 4, 15},
+                      {5, 3, 4, 9},
+                      {6, 8, 3, 5},
+                      {5, 6, 7, 12},
+                      {8, 3, 4, 15}};
+int armorupg[6][3] = {{5, 8, 12},
+                      {8, 12, 16},
+                      {3, 6, 9},
+                      {4, 7, 10},
+                      {5, 7, 11},
+                      {4, 6, 10}};
 int armorupgcost[3] = {20, 40, 60};
-int weaponupg[6][3] = {{2, 1, 1},
-                      {2, 1, 1},
-                      {3, 1, 1},
-                      {3, 1, 1},
-                      {4, 1, 1},
-                      {3, 1, 1}};
+int weaponupg[6][3] = {{2, 3, 1},
+                      {2, 3, 4},
+                      {3, 4, 4},
+                      {3, 4, 4},
+                      {4, 4, 4},
+                      {3, 4, 4}};
 int weaponupgcost[3] = {20, 40, 60};
 int stagecheck (int stage) {
-if (stage==1) {return 1;}
-else if (stage==2)  {return 2;}
-else if (stage==3)  {return 3;}
-else if (stage==4)  {return 4;}
-else if (stage==5)  {return 5;}
+if (stage==1||stage==6||stage==11) {return 1;}
+else if (stage==2||stage==3||stage==7)  {return 2;}
+else if (stage==4||stage==8||stage==9||stage==12||stage==13)  {return 3;}
+else if (stage==10)  {return 4;}
+else if (stage==5||stage==14)  {return 5;}
+else if (stage==15)  {return 6;}
+else if (stage==16)  {return 7;}
 else {return 0;}
 
 }
@@ -85,6 +109,30 @@ for (int i=0; i<vel; i++) {
     }
 }
 }
+void spell1(int &monsterhp, int &gold, int baseatk, int classvyber, int &mana, int manacost, string cont) {
+if (classvyber==1&&mana>=manacost) {
+    cout << "Dvakrát jste svihnul a dal nepřátely poškození za " << baseatk+4 << " hp." << endl;
+    monsterhp = monsterhp - (baseatk+4);
+    mana = mana-manacost;
+    cin >> cont;
+}else if (classvyber==3&&mana>=manacost) {
+    cout << "Sežehnul jste nepřátele a dal mu poškození za " << baseatk+6 << " hp." << endl;
+    monsterhp = monsterhp - (baseatk+6);
+    mana = mana-manacost;
+    cin >> cont;
+}else if (classvyber==4&&mana>=manacost) {
+    int goldgain = rand() % 10+1;
+    cout << "Okradl jste nepřátele a získal " << goldgain << " zlaťáků." << endl;
+    gold = gold+goldgain;
+    mana = mana-manacost;
+    cin >> cont;
+}else if (classvyber==5&&mana>=manacost) {
+    cout << "Střelil jste několik šipů a dal poškození za " << baseatk-2 << " hp." << endl;
+    monsterhp = monsterhp - (baseatk-2);
+    mana = mana-manacost;
+    cin >> cont;
+}
+}
 bool odejit = 0;
 bool canupgarmor =1;
 bool canupgweapon =1;
@@ -93,6 +141,7 @@ int main(){
     system("color 79");
     SetConsoleOutputCP(CP_UTF8); // povolení diakritky v konzoli
     SetConsoleCP(CP_UTF8);
+    srand(time(0));
     int stagetype;
     int stage = 1;
     cout << "RPG HRA - HLAVNI MENU" << endl << "Zapište cokoliv a stistkněte Enter pro zahájení hry.";
@@ -224,12 +273,14 @@ cout << "(Zadejte cokoliv + enter pro pokračování)" << endl << "Kdy se objev�
 cin >> pokracovat;
 system ("cls");
 }
+do {
 stagetype = stagecheck(stage);
 if (stagetype==1) {
         vesnice++;
         odejit=0;
     do {
         cout << stagename[stage-1] << endl;
+        cout << "-------------------------------------------------" << endl;
         cout << "Co chcete podniknout ve vesnici?" << endl << "1) Vylepšit zbroj" << endl << "2) Zakoupit lektvary" << endl << "3) Uzdravit se" << endl << "4) Naučit se nový spell" << endl << "5) Zhlédnout staty" << endl << "6) Odejít" << endl;
         cin >> input;
         switch(input) {
@@ -494,5 +545,198 @@ if (stagetype==1) {
         }
     }while(odejit==0);
 }
+if (stagetype==2) {
+    fight=true;
+    system("cls");
+    monsterID = rand() % stage;
+    monsterhp1 = monstermaxhp[monsterID];
+    while(fight==true) {
+        system("cls");
+        cout << stagename[stage-1] << endl;
+        cout << "-------------------------------------------------" << endl << endl;
+        cout << monstername[monsterID] << endl;
+        cout << "Životy: " << monsterhp1 << "/" <<monstermaxhp[monsterID] << endl << endl;
+        cout << "-------------------------------------------------" << endl;
+        cout << "Životy: " << hrachp << "/" << hracmaxhp << endl;
+        cout << "Mana: " << hracmana << "/" << hracmaxmana << endl << endl;
+        do {
+        if (monsterhp1<=0||hrachp==0) {
+            break;
+        }
+        cout << "1) Útok" << endl << "2) Použít lektvary" << endl << "3) Spelly" << endl;
+        cin >> input;
+        switch(input) {
+        case 1:
+            if (classvyber!=5) {
+                cout << "Zaútočili jste na nepřítele a dali poškození " << hracatk << endl;
+                monsterhp1=monsterhp1-hracatk;
+                cin >> pokracovat;
+            }else if(classvyber==5) {
+                if (loveccanatk==1) {
+                cout << "Zaútočili jste na nepřítele a dali poškození " << hracatk << endl;
+                monsterhp1=monsterhp1-hracatk;
+                loveccanatk = 0;
+                cin >> pokracovat;
+                }else if(loveccanatk==0) {
+                cout << "Přebili jste kuš." << endl;
+                loveccanatk = 1;
+                cin >> pokracovat;
+                }
+
+            }
+            break;
+        case 2:
+            for (int i=0; i<=64; i++) {
+                if (inventory[i]!= 0) {
+                    cout << i << ") " << itemname[inventory[i]] << endl;
+                }
+            }
+            cin >> input;
+            if (inventory[input]==1) {
+                cout << "Použily jste Léčivý lektvar a uzdravili jste se." << endl;
+                hrachp=hrachp+((hracmaxhp/100)*40);
+                if (hrachp>hracmaxhp) {
+                    hrachp = hracmaxhp;
+                }
+            (inventory[input]=0);
+            cin >> pokracovat;
+            }
+            if (inventory[input]==2) {
+                cout << "Použily jste Lektvar many a obnovili jste manu." << endl;
+                hracmana=hracmana+((hracmaxmana/100)*60);
+                if (hracmana>hracmaxmana) {
+                    hracmana = hracmaxmana;
+                }
+            (inventory[input]=0);
+            }
+            if (inventory[input]==3) {
+                cout << "Použily jste smíšený lektvar a obnovili jste manu a životy." << endl;
+                hrachp=hrachp+((hracmaxhp/100)*30);
+                if (hrachp>hracmaxhp) {
+                    hrachp = hracmaxhp;
+                }
+                hracmana=hracmana+((hracmaxmana/100)*40);
+                if (hracmana>hracmaxmana) {
+                    hracmana = hracmaxmana;
+                }
+            (inventory[input]=0);
+            cin >> pokracovat;
+            }
+            if (inventory[input]==4) {
+                cout << "Použily jste záhadný lektvar, vaše životy i mana byly plně obnoveny." << endl;
+                hrachp=hracmaxhp;
+                hracmana=hracmaxmana;
+            (inventory[input]=0);
+            cin >> pokracovat;
+            }
+            if (inventory[input]==0||(inventory[input]!=1&&inventory[input]!=2&&inventory[input]!=3&&inventory[input]!=4)) {
+            cout << "Šáhli jste to prázdné kapsy a nic nenašly, vskutku dobré využití vašeho tahu." << endl;
+            cin >> pokracovat;
+            }
+            break;
+        case 3:  do{
+            cout << "Jaký spell chcete použít?" << endl;
+            cout << "1) " << spellname[0] << " " << spellmanacost[classvyber][0] << endl;
+            for (int i = 1; i<4; i++) {
+                if (spellunlock[i-1] == true) {
+                    cout << i+1 << ") " << spellname[i] << " " << spellmanacost[classvyber][i] << endl;
+                }
+            }
+            cin >> input;
+            if (input<1&&input>3||(input==2&&spellunlock[0]==false)||(input==3&&spellunlock[1]==false)||(input==4&&spellunlock[2]==false)) {
+                cout << "Neplatná hodnota" << endl;
+            }else if(input == 1&&!(classvyber == 2||classvyber == 6)) {
+            cout << "spell1";
+            spell1(monsterhp1, gold, hracatk, classvyber, hracmana, spellmanacost[6][0], pokracovat);
+            }else if(input==1&&classvyber==2) {
+            damagered = 3;
+            cout << "Obránili jste se a teď dostáváte menší damage na 3 kola." << endl;
+            hracmana = hracmana - spellmanacost[classvyber][0];
+            cin >> pokracovat;
+            }else if(input==1&&classvyber==6) {
+            invis = 3;
+            cout << "Znevidili jste se na 3 kola." << endl;
+            hracmana = hracmana - spellmanacost[classvyber][0];
+            cin >> pokracovat;
+            }
+            }while(input<1||(input==2&&spellunlock[0]==false)||(input==3&&spellunlock[1]==false)||(input==4&&spellunlock[2]==false));
+            break;
+        default:
+            cout << "Neplatná hodnota, zadejte hodnotu (1-3)" << endl;
+            break;
+
+        }
+        }while(input<1||input>3);
+    if (monsterhp1>0) {
+        if (invis==0) {
+        if (damagered==0) {
+        cout << monstername[monsterID] << " útočí a dává vám poškození za " << monsteratk[monsterID] << " životů." << endl;
+        hrachp = hrachp-monsteratk[monsterID];
+        cin >> pokracovat;
+        }else if(damagered>0) {
+        if (classvyber==1) {
+        if (monsteratk[monsterID]-hracmaxhp/10<0) {
+            cout << "Útok od monstra jste zablokoval." << endl;
+            cin >> pokracovat;
+        }else{
+        cout << monstername[monsterID] << " útočí a dává vám poškození za " << monsteratk[monsterID]-(hracmaxhp/10) << " životů." << endl;
+        hrachp = hrachp-(monsteratk[monsterID]-(hracmaxhp/10));
+        }
+        }else   if (classvyber==2) {
+        if (monsteratk[monsterID]-hracmaxhp/6<0) {
+            cout << "Útok od monstra jste zablokoval." << endl;
+            cin >> pokracovat;
+        }else{
+        cout << monstername[monsterID] << " útočí a dává vám poškození za " << monsteratk[monsterID]-(hracmaxhp/6) << " životů." << endl;
+        hrachp = hrachp-(monsteratk[monsterID]-(hracmaxhp/6));
+        }
+        }
+        }
+    }else if(invis>0) {
+        cout << "Jste neviditelní a útoku jste se vyhli." << endl;
+        cin >> pokracovat;
+    }
+    }
+    if (monsterhp1<=0) {
+        loveccanatk =1;
+        fight=false;
+        cout<< "Vítezství! Získali jste " << stage*3 << " EXP!" << endl;
+        hrachp = hrachp+2;
+        if (hrachp>hracmaxhp) {
+            hrachp = hracmaxhp;
+        }
+        hracmana=hracmana+4;
+        if (hracmana>hracmaxmana) {
+        hracmana = hracmaxmana;
+        }
+        experience = experience+stage*3;
+        if (experience>=100) {
+            cout << "Level up! Životy se vám zvýšili o 2, mana se vám zvýšila o 4, útok se vám zvýšil o 1!" << endl;
+            hracmaxhp = hracmaxhp+2;
+            hrachp = hrachp+2;
+            hracmaxmana = hracmaxmana+4;
+            hracmana = hracmana+4;
+            hracatk = hracatk+1;
+            experience = experience-100;
+        }
+        golddrop = rand() % 2;
+        if (golddrop == 1) {
+            gold = gold+stage*8;
+            cout << "Získali jste " << stage*8 << " zlaťáků. Teď máte " << gold << " zlaťáků." << endl;
+        }
+    cin >> pokracovat;
+    }
+    if (hrachp ==0) {
+        fight = false;
+        gameover = true;
+    }
+    hracmana++;
+    if (hracmana>hracmaxmana) {
+        hracmana=hracmaxmana;
+    }
+    }
+}
+stage++;
+}while(gameover==false||win==false);
 return 0;
 }
