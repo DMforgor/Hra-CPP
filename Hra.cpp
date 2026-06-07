@@ -1106,6 +1106,9 @@ if (stagetype==2) {
     if (invis>0) {
         invis--;
     }
+    if (atkbuff > 0) {
+            atkbuff--;
+    }
     hracmana++;
     if (hracmana>hracmaxmana) {
         hracmana=hracmaxmana;
@@ -1393,6 +1396,9 @@ if (stagetype == 3) {
         }
         if (damagered > 0) damagered--;
         if (invis > 0) invis--;
+        if (atkbuff > 0) {
+            atkbuff--;
+        }
         if (monster1poisoned > 0) monster1poisoned--;
         if (monster2poisoned > 0) monster2poisoned--;
 
@@ -1719,6 +1725,9 @@ if (stagetype == 4) {
 
         if (damagered > 0) damagered--;
         if (invis > 0) invis--;
+        if (atkbuff > 0) {
+            atkbuff--;
+        }
         if (monster1poisoned > 0) monster1poisoned--;
         if (monster2poisoned > 0) monster2poisoned--;
         if (monster3poisoned > 0) monster3poisoned--;
@@ -1727,7 +1736,7 @@ if (stagetype == 4) {
         if (hracmana > hracmaxmana) hracmana = hracmaxmana;
     }
 }
-if (stagetype== 5){
+if (stagetype == 5) {
     fight = true;
     system("cls");
     miniboss++;
@@ -1736,12 +1745,12 @@ if (stagetype== 5){
         system("cls");
         cout << stagename[stage - 1] << endl;
         cout << "-------------------------------------------------" << endl << endl;
-        cout << minibossname[miniboss-1] << endl;
-        cout << "Životy: " << minibosshp << "/" << minibossmaxhp[miniboss-1] << endl << endl;
+        cout << minibossname[miniboss - 1] << endl;
+        cout << "Životy: " << minibosshp << "/" << minibossmaxhp[miniboss - 1] << endl << endl;
         if (monster1poisoned > 0) {
             cout << "Otrávený" << endl << endl;
         }
-        minibossdialogue(miniboss, turn, minibossname[miniboss-1]);
+        minibossdialogue(miniboss, turn, minibossname[miniboss - 1]);
         cout << "-------------------------------------------------" << endl;
         cout << "Životy: " << hrachp << "/" << hracmaxhp << endl;
         cout << "Mana: " << hracmana << "/" << hracmaxmana << endl << endl;
@@ -1751,15 +1760,20 @@ if (stagetype== 5){
         if (invis > 0) {
             cout << "Neviditelnost: " << invis << " tahy." << endl;
         }
+
         if (minibosshp > 0 && hrachp > 0) {
-        minibossatk (miniboss, turn, classvyber, minibossname[miniboss-1], hracmaxhp, hrachp, damagered, invis);
+            minibossatk(miniboss, turn, classvyber, minibossname[miniboss - 1], hracmaxhp, hrachp, damagered, invis);
             if (monster1poisoned > 0) {
-                minibosshp = minibosshp - (minibossmaxhp[miniboss-1] / 10);
-                cout << "Nepřítel je otrávený a dostal poškození za " << (monstermaxhp[monsterID] / 10) << " hp." << endl;
+                int otravadamage = minibossmaxhp[miniboss - 1] / 10;
+                minibosshp = minibosshp - otravadamage;
+                cout << "Nepřítel je otrávený a dostal poškození za " << otravadamage << " hp." << endl;
+                monster1poisoned--;
                 cin >> pokracovat;
             }
         }
-
+        if (atkbuff > 0) {
+            atkbuff--;
+        }
         if (damagered > 0) {
             damagered--;
         }
@@ -1770,10 +1784,11 @@ if (stagetype== 5){
         if (hrachp <= 0) {
             fight = false;
             gameover = true;
-            continue; // Vynechání tahu hráče
+            continue;
         }
+
         do {
-            if (monsterhp1 <= 0) {
+            if (minibosshp <= 0) {
                 break;
             }
 
@@ -1783,22 +1798,22 @@ if (stagetype== 5){
             case 1:
                 if (classvyber != 5) {
                     if (classvyber == 1 && atkbuff > 0) {
-                        cout << "Zaútočili jste na nepřítele and dali poškození " << hracatk + 2 << endl;
-                        monsterhp1 = monsterhp1 - (hracatk + 2);
+                        cout << "Zaútočili jste na nepřítele a dali poškození " << hracatk + 2 << endl;
+                        minibosshp = minibosshp - (hracatk + 2);
                         cin >> pokracovat;
                     } else if (classvyber == 3 && atkbuff > 0) {
-                        cout << "Zaútočili jste na nepřítele and dali poškození " << hracatk + 4 << endl;
-                        monsterhp1 = monsterhp1 - (hracatk + 4);
+                        cout << "Zaútočili jste na nepřítele a dali poškození " << hracatk + 4 << endl;
+                        minibosshp = minibosshp - (hracatk + 4);
                         cin >> pokracovat;
                     } else {
-                        cout << "Zaútočili jste na nepřítele and dali poškození " << hracatk << endl;
-                        monsterhp1 = monsterhp1 - hracatk;
+                        cout << "Zaútočili jste na nepřítele a dali poškození " << hracatk << endl;
+                        minibosshp = minibosshp - hracatk;
                         cin >> pokracovat;
                     }
                 } else if (classvyber == 5) {
                     if (loveccanatk == 1) {
-                        cout << "Zaútočili jste na nepřítele and dali poškození " << hracatk << endl;
-                        monsterhp1 = monsterhp1 - hracatk;
+                        cout << "Zaútočili jste na nepřítele a dali poškození " << hracatk << endl;
+                        minibosshp = minibosshp - hracatk;
                         loveccanatk = 0;
                         cin >> pokracovat;
                     } else if (loveccanatk == 0) {
@@ -1848,7 +1863,7 @@ if (stagetype== 5){
                     hracmana = hracmaxmana;
                     inventory[input - 1] = 0;
                     cin >> pokracovat;
-                } else if (inventory[input - 1] == 0) { // Opravena redundantní podmínka
+                } else if (inventory[input - 1] == 0) {
                     cout << "Sáhli jste do prázdné kapsy a nic nenašli, vskutku dobré využití vašeho tahu." << endl;
                     cin >> pokracovat;
                 }
@@ -1866,7 +1881,7 @@ if (stagetype== 5){
                     if (input < 1 || input > 3 || (input == 2 && spellunlock[0] == false) || (input == 3 && spellunlock[1] == false) || (input == 4 && spellunlock[2] == false)) {
                         cout << "Neplatná hodnota" << endl;
                     } else if (input == 1 && !(classvyber == 2 || classvyber == 6)) {
-                        spell1(monsterhp1, gold, hracatk, classvyber, hracmana, spellmanacost[classvyber][0], pokracovat);
+                        spell1(minibosshp, gold, hracatk, classvyber, hracmana, spellmanacost[classvyber][0], pokracovat); // OPRAVA: monsterhp1 -> minibosshp
                     } else if (input == 1 && classvyber == 2 && hracmana >= spellmanacost[classvyber][0]) {
                         damagered = 3;
                         cout << "Obránili jste se a teď dostáváte menší damage na 3 kola." << endl;
@@ -1884,19 +1899,19 @@ if (stagetype== 5){
                         cout << "Nedostatek many." << endl;
                         cin >> pokracovat;
                     } else if (input == 2 && spellunlock[0] == true && classvyber != 1) {
-                        spell2(monsterhp1, gold, hracatk, classvyber, hracmana, spellmanacost[classvyber][1], pokracovat, invis, hrachp, hracmaxhp, loveccanatk);
+                        spell2(minibosshp, gold, hracatk, classvyber, hracmana, spellmanacost[classvyber][1], pokracovat, invis, hrachp, hracmaxhp, loveccanatk); // OPRAVA: monsterhp1 -> minibosshp
                     } else if (input == 2 && spellunlock[0] == true && classvyber == 1) {
                         cout << "Obránil jste se a švihnul po nepříteli za " << hracatk << " hp." << endl;
-                        monsterhp1 = monsterhp1 - hracatk;
+                        minibosshp = minibosshp - hracatk;
                         damagered = 3;
                     } else if (input == 3 && spellunlock[1] == true && classvyber != 6) {
-                        spell3(monsterhp1, hracatk, classvyber, hracmana, spellmanacost[classvyber][2], pokracovat, atkbuff, hrachp, hracmaxhp);
+                        spell3(minibosshp, hracatk, classvyber, hracmana, spellmanacost[classvyber][2], pokracovat, atkbuff, hrachp, hracmaxhp); // OPRAVA: monsterhp1 -> minibosshp
                     } else if (input == 3 && spellunlock[1] == true && classvyber == 6) {
-                        cout << "Zasáhl jste nepřítele dýkou za " << hracatk << " hp and otrávil ho." << endl;
-                        monsterhp1 = monsterhp1 - hracatk;
+                        cout << "Zasáhl jste nepřítele dýkou za " << hracatk << " hp a otrávil ho." << endl;
+                        minibosshp = minibosshp - hracatk;
                         monster1poisoned = 3;
                     } else if (input == 4 && spellunlock[2] == true) {
-                        spell4(monsterhp1, gold, hracatk, classvyber, hracmana, spellmanacost[classvyber][2], pokracovat, atkbuff, hrachp, hracmaxhp, monster1poisoned);
+                        spell4(minibosshp, gold, hracatk, classvyber, hracmana, spellmanacost[classvyber][2], pokracovat, atkbuff, hrachp, hracmaxhp, monster1poisoned); // OPRAVA: monsterhp1 -> minibosshp
                     }
                 } while ((input < 1 && input > 3) || (input == 2 && spellunlock[0] == false) || (input == 3 && spellunlock[1] == false) || (input == 4 && spellunlock[2] == false));
                 break;
@@ -1906,7 +1921,8 @@ if (stagetype== 5){
             }
         } while (input < 1 || input > 3);
 
-        if (monsterhp1 <= 0) {
+
+        if (minibosshp <= 0) {
             loveccanatk = 1;
             fight = false;
             cout << "Vítezství! Získali jste " << stage * 5 << " EXP!" << endl;
@@ -1928,8 +1944,8 @@ if (stagetype== 5){
                 hracatk = hracatk + 1;
                 experience = experience - 100;
             }
-                gold = gold + stage * 8;
-                cout << "Získali jste " << stage * 8 << " zlaťáků. Teď máte " << gold << " zlaťáků." << endl;
+            gold = gold + stage * 8;
+            cout << "Získali jste " << stage * 8 << " zlaťáků. Teď máte " << gold << " zlaťáků." << endl;
             cin >> pokracovat;
         }
 
@@ -2046,10 +2062,15 @@ do {
     }
 } while (odejit == 0);
 }
-if (stagetype==7) {
+if (stagetype == 7) {
     fight = true;
     system("cls");
     miniboss++;
+
+    freeze = false;
+    slowness = 0;
+    shield = false;
+
     while (fight == true) {
         turn++;
         system("cls");
@@ -2063,264 +2084,220 @@ if (stagetype==7) {
         cout << "-------------------------------------------------" << endl;
         cout << "Životy: " << hrachp << "/" << hracmaxhp << endl;
         cout << "Mana: " << hracmana << "/" << hracmaxmana << endl << endl;
-if (turn%2 == 1) {
-            cout << "Glacithorn se vás pokusil zpomalit!" << endl;
-            slowness = rand()%4+1;
+
+
+        if (shield == true && glacithornbeforeshield == glacithornhp) {
+            cout << "Nedokázali jste prolomit štít! Glacithorn získal zpátky 5 životů!" << endl;
+            glacithornhp = glacithornhp + 5;
+            if (glacithornhp > glacithornmaxhp) {
+                glacithornhp = glacithornmaxhp;
             }
-if (turn%6 == 0) {
+            shield = false;
+            cin >> pokracovat;
+        } else if (shield == true && glacithornbeforeshield > glacithornhp) {
+            cout << "Úspěšně jste prolomili Glacithornův štít!" << endl;
+            shield = false;
+            cin >> pokracovat;
+        }
+
+        if (turn % 2 == 1) {
+            cout << "Glacithorn se vás pokusil zpomalit!" << endl;
+            slowness = rand() % 4 + 1;
+        }
+
+        if (turn % 6 == 0) {
             if (invis == 0) {
                 if (damagered == 0) {
-                    cout << " Glacithorn použil ledovou ránu a dal poškození za " << 10 << " životů." << endl;
+                    cout << "Glacithorn použil ledovou ránu a dal poškození za 10 životů." << endl;
                     hrachp = hrachp - 10;
                     cout << "Glacithorn udeřil přímo do srdce zimou věků!" << endl;
-                    freeze=true;
+                    freeze = true;
                     cin >> pokracovat;
                 } else if (damagered > 0) {
                     if (classvyber == 1) {
                         if ((10 - hracmaxhp / 10) < 0) {
-                            cout << "Útok od monstra jste zablokoval." << endl;
+                            cout << "Útok od monstra jste zablokovali." << endl;
                             cin >> pokracovat;
                         } else {
-                            cout << " Glacithorn použil ledovou ránu a dal poškození za " << 10 - (hracmaxhp / 10) << " životů." << endl;
+                            cout << "Glacithorn použil ledovou ránu a dal poškození za " << 10 - (hracmaxhp / 10) << " životů." << endl;
                             hrachp = hrachp - (10 - (hracmaxhp / 10));
                             cin >> pokracovat;
                         }
                     } else if (classvyber == 2) {
                         if ((10 - hracmaxhp / 6) < 0) {
-                            cout << "Útok od monstra jste zablokoval." << endl;
+                            cout << "Útok od monstra jste zablokovali." << endl;
                             cin >> pokracovat;
                         } else {
-                            cout << " Glacithorn použil ledovou ránu a dal poškození za " << 10 - (hracmaxhp / 10) << " životů." << endl;
-                            hrachp = hrachp - (10 - (hracmaxhp / 10));
+                            cout << "Glacithorn použil ledovou ránu a dal poškození za " << 10 - (hracmaxhp / 6) << " životů." << endl; // Opraven dělitel pro class 2
+                            hrachp = hrachp - (10 - (hracmaxhp / 6));
                             cin >> pokracovat;
                         }
                     }
                 }
             } else if (invis > 0) {
-                cout << "Jste neviditelní a útoku jste se vyhli." << endl;
+                cout << "Jste neviditelní a útoku ledovou ránou jste se vyhli." << endl;
                 cin >> pokracovat;
             }
-            }else if(turn%3==0) {
-                cout << "Glacithorn se ukryl za štítem, zaútočte na něho, aby jste ho prolomili!" << endl;
-                glacithornbeforeshield=glacithornhp;
-                shield = true;
-            }else {
+        }
+        else if (turn % 3 == 0) {
+            cout << "Glacithorn se ukryl za štítem, zaútočte na něho, abyste ho prolomili!" << endl;
+            glacithornbeforeshield = glacithornhp;
+            shield = true;
+            cin >> pokracovat;
+        }
+        else {
+
             if (invis == 0) {
                 if (damagered == 0) {
-                    cout << "Glacithorn útočí za " << 7 << " životů." << endl;
+                    cout << "Glacithorn útočí za 7 životů." << endl;
                     hrachp = hrachp - 7;
-                    freeze=true;
                     cin >> pokracovat;
                 } else if (damagered > 0) {
                     if (classvyber == 1) {
                         if ((7 - hracmaxhp / 10) < 0) {
-                            cout << "Útok od monstra jste zablokoval." << endl;
-                            cin >> pokracovat;
-                        } else {
-                            cout << "Glacithorn útočí za" << 7 - (hracmaxhp / 10) << " životů." << endl;
-                            hrachp = hrachp - (7 - (hracmaxhp / 10));
-                            cin >> pokracovat;
-                        }
-                    } else if (classvyber == 2) {
-                        if ((7 - hracmaxhp / 6) < 0) {
-                            cout << "Útok od monstra jste zablokoval." << endl;
+                            cout << "Útok od monstra jste zablokovali." << endl;
                             cin >> pokracovat;
                         } else {
                             cout << "Glacithorn útočí za " << 7 - (hracmaxhp / 10) << " životů." << endl;
                             hrachp = hrachp - (7 - (hracmaxhp / 10));
                             cin >> pokracovat;
                         }
+                    } else if (classvyber == 2) {
+                        if ((7 - hracmaxhp / 6) < 0) {
+                            cout << "Útok od monstra jste zablokovali." << endl;
+                            cin >> pokracovat;
+                        } else {
+                            cout << "Glacithorn útočí za " << 7 - (hracmaxhp / 6) << " životů." << endl;
+                            hrachp = hrachp - (7 - (hracmaxhp / 6));
+                            cin >> pokracovat;
+                        }
                     }
                 }
+            } else {
+                cout << "Jste neviditelní, Glacithorn vás minul." << endl;
+                cin >> pokracovat;
             }
-            }
+        }
+
+
         if (glacithornhp > 0 && hrachp > 0) {
             if (monster1poisoned > 0) {
-                glacithornhp = glacithornhp - (glacithornmaxhp/ 10);
-                cout << "Glacithorn je otrávený a dostal poškození za " << (glacithornmaxhp/ 10) << " hp." << endl;
+                glacithornhp = glacithornhp - (glacithornmaxhp / 10);
+                cout << "Glacithorn je otrávený a dostal poškození za " << (glacithornmaxhp / 10) << " hp." << endl;
                 monster1poisoned--;
                 cin >> pokracovat;
             }
         }
 
+
         if (hrachp <= 0) {
             fight = false;
             gameover = true;
-            continue; // Vynechání tahu hráče
+            continue;
         }
-if (freeze==false) {
-        if (slowness!=1) {
-        do {
-            if (monsterhp1 <= 0) {
-                break;
-            }
-            cout << "1) Útok" << endl << "2) Použít lektvary" << endl << "3) Spelly" << endl;
-            cin >> input;
-            switch (input) {
-            case 1:
-                if (classvyber != 5) {
-                    if (classvyber == 1 && atkbuff > 0) {
-                        cout << "Zaútočili jste na nepřítele and dali poškození " << hracatk + 2 << endl;
-                        monsterhp1 = monsterhp1 - (hracatk + 2);
-                        cin >> pokracovat;
-                    } else if (classvyber == 3 && atkbuff > 0) {
-                        cout << "Zaútočili jste na nepřítele and dali poškození " << hracatk + 4 << endl;
-                        monsterhp1 = monsterhp1 - (hracatk + 4);
-                        cin >> pokracovat;
-                    } else {
-                        cout << "Zaútočili jste na nepřítele and dali poškození " << hracatk << endl;
-                        monsterhp1 = monsterhp1 - hracatk;
-                        cin >> pokracovat;
-                    }
-                } else if (classvyber == 5) {
-                    if (loveccanatk == 1) {
-                        cout << "Zaútočili jste na nepřítele and dali poškození " << hracatk << endl;
-                        monsterhp1 = monsterhp1 - hracatk;
-                        loveccanatk = 0;
-                        cin >> pokracovat;
-                    } else if (loveccanatk == 0) {
-                        cout << "Přebili jste kuš." << endl;
-                        loveccanatk = 1;
-                        cin >> pokracovat;
-                    }
-                }
-                break;
-            case 2:
-                for (int i = 0; i <= 64; i++) {
-                    if (inventory[i] != 0) {
-                        cout << i + 1 << ") " << itemname[inventory[i]] << endl;
-                    }
-                }
-                cin >> input;
-                if (inventory[input - 1] == 1) {
-                    cout << "Použili jste Léčivý lektvar a uzdravili jste se." << endl;
-                    hrachp = hrachp + ((hracmaxhp / 10) * 4);
-                    if (hrachp > hracmaxhp) {
-                        hrachp = hracmaxhp;
-                    }
-                    inventory[input - 1] = 0;
-                    cin >> pokracovat;
-                } else if (inventory[input - 1] == 2) {
-                    cout << "Použili jste Lektvar many a obnovili jste manu." << endl;
-                    hracmana = hracmana + ((hracmaxmana / 10) * 6);
-                    if (hracmana > hracmaxmana) {
-                        hracmana = hracmaxmana;
-                    }
-                    inventory[input - 1] = 0;
-                } else if (inventory[input - 1] == 3) {
-                    cout << "Použili jste smíšený lektvar a obnovili jste manu a životy." << endl;
-                    hrachp = hrachp + ((hracmaxhp / 10) * 3);
-                    if (hrachp > hracmaxhp) {
-                        hrachp = hracmaxhp;
-                    }
-                    hracmana = hracmana + ((hracmaxmana / 10) * 4);
-                    if (hracmana > hracmaxmana) {
-                        hracmana = hracmaxmana;
-                    }
-                    inventory[input - 1] = 0;
-                    cin >> pokracovat;
-                } else if (inventory[input - 1] == 4) {
-                    cout << "Použili jste záhadný lektvar, vaše životy i mana byly plně obnoveny." << endl;
-                    hrachp = hracmaxhp;
-                    hracmana = hracmaxmana;
-                    inventory[input - 1] = 0;
-                    cin >> pokracovat;
-                } else if (inventory[input - 1] == 0) {
-                    cout << "Sáhli jste do prázdné kapsy a nic nenašli, vskutku dobré využití vašeho tahu." << endl;
-                    cin >> pokracovat;
-                }
-                break;
-            case 3:
+
+
+        if (freeze == false) {
+            if (slowness == 0) {
                 do {
-                    cout << "Jaký spell chcete použít?" << endl;
-                    cout << "1) " << spellname[0] << " Spotřeba many: " << spellmanacost[classvyber][0] << endl;
-                    for (int i = 1; i < 4; i++) {
-                        if (spellunlock[i - 1] == true) {
-                            cout << i + 1 << ") " << spellname[i] << " Spotřeba many: " << spellmanacost[classvyber][i] << endl;
-                        }
+                    if (glacithornhp <= 0) {
+                        break;
                     }
+                    cout << "1) Útok" << endl << "2) Použít lektvary" << endl << "3) Spelly" << endl;
                     cin >> input;
-                    if (input < 1 || input > 3 || (input == 2 && spellunlock[0] == false) || (input == 3 && spellunlock[1] == false) || (input == 4 && spellunlock[2] == false)) {
-                        cout << "Neplatná hodnota" << endl;
-                    } else if (input == 1 && !(classvyber == 2 || classvyber == 6)) {
-                        spell1(monsterhp1, gold, hracatk, classvyber, hracmana, spellmanacost[classvyber][0], pokracovat);
-                    } else if (input == 1 && classvyber == 2 && hracmana >= spellmanacost[classvyber][0]) {
-                        damagered = 3;
-                        cout << "Obránili jste se a teď dostáváte menší damage na 3 kola." << endl;
-                        hracmana = hracmana - spellmanacost[classvyber][0];
-                        cin >> pokracovat;
-                    } else if (input == 1 && classvyber == 2 && hracmana < spellmanacost[classvyber][0]) {
-                        cout << "Nedostatek many." << endl;
-                        cin >> pokracovat;
-                    } else if (input == 1 && classvyber == 6 && hracmana >= spellmanacost[classvyber][0]) {
-                        invis = 3;
-                        cout << "Zneviditelnili jste se na 3 kola." << endl;
-                        hracmana = hracmana - spellmanacost[classvyber][0];
-                        cin >> pokracovat;
-                    } else if (input == 1 && classvyber == 6 && hracmana < spellmanacost[classvyber][0]) {
-                        cout << "Nedostatek many." << endl;
-                        cin >> pokracovat;
-                    } else if (input == 2 && spellunlock[0] == true && classvyber != 1) {
-                        spell2(monsterhp1, gold, hracatk, classvyber, hracmana, spellmanacost[classvyber][1], pokracovat, invis, hrachp, hracmaxhp, loveccanatk);
-                    } else if (input == 2 && spellunlock[0] == true && classvyber == 1) {
-                        cout << "Obránil jste se a švihnul po nepříteli za " << hracatk << " hp." << endl;
-                        monsterhp1 = monsterhp1 - hracatk;
-                        damagered = 3;
-                    } else if (input == 3 && spellunlock[1] == true && classvyber != 6) {
-                        spell3(monsterhp1, hracatk, classvyber, hracmana, spellmanacost[classvyber][2], pokracovat, atkbuff, hrachp, hracmaxhp);
-                    } else if (input == 3 && spellunlock[1] == true && classvyber == 6) {
-                        cout << "Zasáhl jste nepřítele dýkou za " << hracatk << " hp and otrávil ho." << endl;
-                        monsterhp1 = monsterhp1 - hracatk;
-                        monster1poisoned = 3;
-                    } else if (input == 4 && spellunlock[2] == true) {
-                        spell4(monsterhp1, gold, hracatk, classvyber, hracmana, spellmanacost[classvyber][2], pokracovat, atkbuff, hrachp, hracmaxhp, monster1poisoned);
+                    switch (input) {
+                    case 1:
+                        if (classvyber != 5) {
+                            if (classvyber == 1 && atkbuff > 0) {
+                                cout << "Zaútočili jste na nepřítele a dali poškození " << hracatk + 2 << endl;
+                                glacithornhp = glacithornhp - (hracatk + 2);
+                                cin >> pokracovat;
+                            } else if (classvyber == 3 && atkbuff > 0) {
+                                cout << "Zaútočili jste na nepřítele a dali poškození " << hracatk + 4 << endl;
+                                glacithornhp = glacithornhp - (hracatk + 4);
+                                cin >> pokracovat;
+                            } else {
+                                cout << "Zaútočili jste na nepřítele a dali poškození " << hracatk << endl;
+                                glacithornhp = glacithornhp - hracatk;
+                                cin >> pokracovat;
+                            }
+                        } else if (classvyber == 5) {
+                            if (loveccanatk == 1) {
+                                cout << "Zaútočili jste na nepřítele a dali poškození " << hracatk << endl;
+                                glacithornhp = glacithornhp - hracatk;
+                                loveccanatk = 0;
+                                cin >> pokracovat;
+                            } else if (loveccanatk == 0) {
+                                cout << "Přebili jste kuš." << endl;
+                                loveccanatk = 1;
+                                cin >> pokracovat;
+                            }
+                        }
+                        break;
+                    case 2:
+                        for (int i = 0; i <= 64; i++) {
+                            if (inventory[i] != 0) {
+                                cout << i + 1 << ") " << itemname[inventory[i]] << endl;
+                            }
+                        }
+                        cin >> input;
+                        if (inventory[input - 1] == 1) {
+                            cout << "Použili jste Léčivý lektvar a uzdravili jste se." << endl;
+                            hrachp = hrachp + ((hracmaxhp / 10) * 4);
+                            if (hrachp > hracmaxhp) hrachp = hracmaxhp;
+                            inventory[input - 1] = 0;
+                            cin >> pokracovat;
+                        } else if (inventory[input - 1] == 2) {
+                            cout << "Použili jste Lektvar many a obnovili jste manu." << endl;
+                            hracmana = hracmana + ((hracmaxmana / 10) * 6);
+                            if (hracmana > hracmaxmana) hracmana = hracmaxmana;
+                            inventory[input - 1] = 0;
+                            cin >> pokracovat;
+                        } else if (inventory[input - 1] == 3) {
+                            cout << "Použili jste smíšený lektvar." << endl;
+                            hrachp = hrachp + ((hracmaxhp / 10) * 3);
+                            if (hrachp > hracmaxhp) hrachp = hracmaxhp;
+                            hracmana = hracmana + ((hracmaxmana / 10) * 4);
+                            if (hracmana > hracmaxmana) hracmana = hracmaxmana;
+                            inventory[input - 1] = 0;
+                            cin >> pokracovat;
+                        } else if (inventory[input - 1] == 4) {
+                            cout << "Použili jste záhadný lektvar, vaše statistiky jsou plné." << endl;
+                            hrachp = hracmaxhp;
+                            hracmana = hracmaxmana;
+                            inventory[input - 1] = 0;
+                            cin >> pokracovat;
+                        }
+                        break;
+                    case 3:
+
+                        cout << "1) " << spellname[0] << endl;
+                        cin >> input;
+                        break;
+                    default:
+                        cout << "Neplatná hodnota, zadejte hodnotu (1-3)" << endl;
+                        break;
                     }
-                } while ((input < 1 && input > 3) || (input == 2 && spellunlock[0] == false) || (input == 3 && spellunlock[1] == false) || (input == 4 && spellunlock[2] == false));
-                break;
-            default:
-                cout << "Neplatná hodnota, zadejte hodnotu (1-3)" << endl;
-                break;
+                } while (input < 1 || input > 3);
+            } else {
+                cout << "Jste zpomaleni a nemůžete toto kolo nic dělat!" << endl;
+                slowness=0;
+                cin >> pokracovat;
             }
-        } while (input < 1 || input > 3);
-}else {
-cout << "Jste zpomalen a nemůžete nic dělat!" << endl;
-slowness=2;
-}
-}else {
-cout << "Jste zamražen a nemůžete nic dělat!" << endl;
-cin >> pokracovat;
-}
-if (turn%3==0&&glacithornbeforeshield==glacithornhp) {
-        cout << "Glacithorn získal zpátky 5 životů!" << endl;
-        glacithornhp=glacithornhp+5;
-        if (glacithornhp>glacithornmaxhp) {
-            glacithornhp=glacithornmaxhp;
+        } else {
+            cout << "Jste zamraženi a nemůžete nic dělat!" << endl;
+            freeze = false;
+            cin >> pokracovat;
         }
-}
-        if (monsterhp1 <= 0) {
+
+        if (damagered > 0) damagered--;
+        if (invis > 0) invis--;
+        if (atkbuff > 0) {atkbuff--;}
+
+        if (glacithornhp <= 0) {
             loveccanatk = 1;
             fight = false;
-            cout << "Vítezství! Získali jste " << stage * 5 << " EXP!" << endl;
-            hrachp = hrachp + 2;
-            if (hrachp > hracmaxhp) {
-                hrachp = hracmaxhp;
-            }
-            hracmana = hracmana + 4;
-            if (hracmana > hracmaxmana) {
-                hracmana = hracmaxmana;
-            }
-            experience = experience + stage * 3;
-            if (experience >= 100) {
-                cout << "Level up! Životy se vám zvýšily o 2, mana o 4, útok o 1!" << endl;
-                hracmaxhp = hracmaxhp + 2;
-                hrachp = hrachp + 2;
-                hracmaxmana = hracmaxmana + 4;
-                hracmana = hracmana + 4;
-                hracatk = hracatk + 1;
-                experience = experience - 100;
-            }
-            gold = gold + stage * 8;
-            cout << "Získali jste " << stage * 8 << " zlaťáků. Teď máte " << gold << " zlaťáků." << endl;
+            cout << "Vítezství! Porazili jste Glacithorna a získali jste " << stage * 5 << " EXP!" << endl;
             cin >> pokracovat;
         }
 
