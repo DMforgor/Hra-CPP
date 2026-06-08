@@ -1740,6 +1740,7 @@ if (stagetype == 5) {
     fight = true;
     system("cls");
     miniboss++;
+    minibosshp=minibossmaxhp[miniboss-1];
     while (fight == true) {
         turn++;
         system("cls");
