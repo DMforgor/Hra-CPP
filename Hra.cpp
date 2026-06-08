@@ -1040,7 +1040,7 @@ if (stagetype==2) {
             break;
 
         }
-        }while(input<1||input>3);
+        }while(input<1||input>4);
     if (monsterhp1>0) {
         if (invis==0) {
         if (damagered==0) {
