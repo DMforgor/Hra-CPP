@@ -1,5 +1,6 @@
 # Hra-CPP
 Jedná se o základní RPG hru s 6 třídami (classami), přičemž každá třída má až čtyři schopnosti. Hra není zcela vybalancovaná, ale pokud by měl hráč potíže, doporučil bych použít třídu Assassin.
+Většinou zapisujete cokoliv + Enter, abyste pokračovali (v některých častech hry to je zapsaný, ale v některých ne).
 
 ## Vesnice
 Ve vesnici může hráč obnovit životy, zvýšit své maximální životy a útok, zakoupit lektvary nebo se naučit nové kouzlo (spell).
