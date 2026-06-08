@@ -601,6 +601,10 @@ cin >> pokracovat;
 system ("cls");
 }
 do {
+if (hrachp==0) {
+    gameover==true;
+    break;
+}
 stagetype = stagecheck(stage);
 if (stagetype==1) {
         vesnice++;
@@ -1099,6 +1103,7 @@ if (stagetype==2) {
     if (hrachp<=0) {
         fight = false;
         gameover = true;
+        continue;
     }
     if (damagered>0) {
         damagered--;
