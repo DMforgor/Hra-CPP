@@ -19,5 +19,5 @@ Na rozdíl od hráče začínají tah jako první a mají několik předdefinova
 ## Použité kousky kódu a zdroje
 * **Knihovna `<cstdlib>` a `system("cls")`** – zdroj: Chtěl jsem už při tvorbě minulé hry vymazat obrazovku a našel jsem toto řešení.
 * **`system("color 79")`** – zdroj: Ukazovali jsme si na hodině.
-* **`SetConsoleOutputCP(CP_UTF8)` a `SetConsoleCP(CP_UTF8)`** – povolí v konzoli českou diakritiku.
+* **`SetConsoleOutputCP(CP_UTF8)` a `SetConsoleCP(CP_UTF8)`** – zdroj: Google AI sumarizace, povolí v konzoli českou diakritiku.
 * **`continue`** – zdroj: Při implementaci boje se 2 a 3 monstry (a částečně u minibossů a bosse) mi pomohl model Gemini, který tuto funkci využil. Zjednodušeně řečeno v kódu ukončuje boj, pokud hráčovy životy klesnou na 0.
