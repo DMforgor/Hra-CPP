@@ -280,6 +280,8 @@ void minibossdialogue(int miniboss, int turn, string minibossname) {
         case 5:
         cout << minibossname << ": Proč se furt snažíš?" << endl;
         break;
+        default:
+        break;
         }
     }else if (miniboss==2) {
         switch(turn) {
@@ -294,6 +296,8 @@ void minibossdialogue(int miniboss, int turn, string minibossname) {
         break;
         case 6:
         cout << minibossname << ": Vypadá to, že i s Frostpiercerem mi budeš dávat potíže!" << endl;
+        break;
+        default:
         break;
         }
     }
@@ -1027,10 +1031,10 @@ if (stagetype==2) {
             }else if(input==4&&spellunlock[2]==true) {
             spell4(monsterhp1, gold, hracatk, classvyber, hracmana, spellmanacost[classvyber][2], pokracovat, atkbuff, hrachp, hracmaxhp, monster1poisoned);
             }
-            }while(input<1&&input>4||(input==2&&spellunlock[0]==false)||(input==3&&spellunlock[1]==false)||(input==4&&spellunlock[2]==false));
+            }while(input<1&&input>4||((input==2&&spellunlock[0]==false)||(input==3&&spellunlock[1]==false)||(input==4&&spellunlock[2]==false)));
             break;
         default:
-            cout << "Neplatná hodnota, zadejte hodnotu (1-3)" << endl;
+            cout << "Neplatná hodnota, zadejte hodnotu (1-4)" << endl;
             break;
 
         }
@@ -2073,12 +2077,10 @@ do {
 if (stagetype == 7) {
     fight = true;
     system("cls");
-    miniboss++;
-
     freeze = false;
     slowness = 0;
     shield = false;
-
+    glacithornhp=glacithornmaxhp;
     while (fight == true) {
         turn++;
         system("cls");
