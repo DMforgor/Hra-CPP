@@ -376,7 +376,7 @@ void minibossatk (int miniboss, int turn, int classvyber, string minibossname, i
                             cout << "Útok od monstra jste zablokoval." << endl;
                             cin >> pokracovat;
                         } else {
-                            cout << minibossname << " švihá svým mečem a dáva poškození za " << 10 - (hracmaxhp / 10) << " životů." << endl;
+                            cout << minibossname << " vás silně bodne Frostpiercerem za  " << 10 - (hracmaxhp / 10) << " životů." << endl;
                             hrachp = hrachp - (10 - (hracmaxhp / 10));
                             cin >> pokracovat;
                         }
@@ -385,7 +385,7 @@ void minibossatk (int miniboss, int turn, int classvyber, string minibossname, i
                             cout << "Útok od monstra jste zablokoval." << endl;
                             cin >> pokracovat;
                         } else {
-                            cout << minibossname << " švihá svým mečem a dáva poškození za " << 10 - (hracmaxhp / 6) << " životů." << endl;
+                            cout << minibossname << " vás silně bodne Frostpiercerem za  " << 10 - (hracmaxhp / 6) << " životů." << endl;
                             hrachp = hrachp - (10 - (hracmaxhp / 6));
                             cin >> pokracovat;
                         }
@@ -463,7 +463,7 @@ void minibossatk (int miniboss, int turn, int classvyber, string minibossname, i
 bool odejit = 0;
 bool canupgarmor =1;
 bool canupgweapon =1;
-string stagename[] = {"Začátečnická vesnice", "Pláně", "Začátek lesa", "Hluboko v lese", "Most do zapomenuté vesnice", "Zapomenutá vesnice", "Vstup do jeskyně", "Začátek jeskyně", "Hluboko v jeskyni", "Vesnice v jeskyni", "Výstup na horu", "Ledová jeskyně", "Hluboko v ledové jeskyni ", "Lektvarový obchod", "Jádro kletby"};
+string stagename[] = {"Začátečnická vesnice", "Pláně", "Začátek lesa", "Hluboko v lese", "Most do zapomenuté vesnice", "Zapomenutá vesnice", "Vstup do jeskyně", "Začátek jeskyně", "Hluboko v jeskyni", "Okolí vesnice","Vesnice v jeskyni", "Výstup na horu", "Ledová jeskyně", "Hluboko v ledové jeskyni ", "Lektvarový obchod", "Jádro kletby"};
 int main(){
     system("color 79");
     SetConsoleOutputCP(CP_UTF8);
@@ -631,7 +631,7 @@ if (stagetype==1) {
                     hracmaxhp = hracmaxhp+armorupg[classvyber-1][armorlvl];
                     hrachp = hrachp+armorupg[classvyber-1][armorlvl];
                     canupgarmor = 0;
-                    cout << "Životy se vám zvýšili o " << armorupg[classvyber][armorlvl] << " teď máte " << gold << " zlaťáků." << endl;
+                    cout << "Životy se vám zvýšili o " << armorupg[classvyber-1][armorlvl] << " teď máte " << gold << " zlaťáků." << endl;
                     armorlvl++;
                 }else if(gold<armorupgcost[armorlvl]) {
                     cout << "Nemáte dostatek zlaťáků, chybí vám " << armorupgcost[armorlvl]-gold << " zlaťáků." << endl;
@@ -650,7 +650,7 @@ if (stagetype==1) {
                     gold = gold-weaponupgcost[weaponlvl];
                     hracatk = hracatk+weaponupg[classvyber-1][weaponlvl];
                     canupgweapon = 0;
-                    cout << "Útok se vám zvýšil o " << weaponupg[classvyber][weaponlvl] << " teď máte " << gold << " zlaťáků." << endl;
+                    cout << "Útok se vám zvýšil o " << weaponupg[classvyber-1][weaponlvl] << " teď máte " << gold << " zlaťáků." << endl;
                     weaponlvl++;
                 }else if(gold<weaponupgcost[weaponlvl]) {
                     cout << "Nemáte dostatek zlaťáků, chybí vám " << weaponupgcost[weaponlvl]-gold << " zlaťáků." << endl;
@@ -1027,7 +1027,7 @@ if (stagetype==2) {
             }else if(input==4&&spellunlock[2]==true) {
             spell4(monsterhp1, gold, hracatk, classvyber, hracmana, spellmanacost[classvyber][2], pokracovat, atkbuff, hrachp, hracmaxhp, monster1poisoned);
             }
-            }while(input<1&&input>3||(input==2&&spellunlock[0]==false)||(input==3&&spellunlock[1]==false)||(input==4&&spellunlock[2]==false));
+            }while(input<1&&input>4||(input==2&&spellunlock[0]==false)||(input==3&&spellunlock[1]==false)||(input==4&&spellunlock[2]==false));
             break;
         default:
             cout << "Neplatná hodnota, zadejte hodnotu (1-3)" << endl;
@@ -1256,7 +1256,7 @@ if (stagetype == 3) {
                     cin >> input;
 
 
-                    if (input < 1 && input > 3 || (input == 2 && spellunlock[0] == false) || (input == 3 && spellunlock[1] == false) || (input == 4 && spellunlock[2] == false)) {
+                    if (input < 1 && input > 4 || (input == 2 && spellunlock[0] == false) || (input == 3 && spellunlock[1] == false) || (input == 4 && spellunlock[2] == false)) {
                         cout << "Neplatná hodnota" << endl;
                     } else {
                         bool potrebujeCil = true;
@@ -1313,7 +1313,7 @@ if (stagetype == 3) {
                             else spell4(monsterhp2, gold, hracatk, classvyber, hracmana, spellmanacost[classvyber][2], pokracovat, atkbuff, hrachp, hracmaxhp, monster2poisoned);
                         }
                     }
-                } while (input < 1 && input > 3 || (input == 2 && spellunlock[0] == false) || (input == 3 && spellunlock[1] == false) || (input == 4 && spellunlock[2] == false));
+                } while (input < 1 && input > 4 || (input == 2 && spellunlock[0] == false) || (input == 3 && spellunlock[1] == false) || (input == 4 && spellunlock[2] == false));
                 break;
             }
             default:
@@ -1570,7 +1570,7 @@ if (stagetype == 4) {
                     }
                     cin >> input;
 
-                    if (input < 1 && input > 3 || (input == 2 && spellunlock[0] == false) || (input == 3 && spellunlock[1] == false) || (input == 4 && spellunlock[2] == false)) {
+                    if (input < 1 && input > 4 || (input == 2 && spellunlock[0] == false) || (input == 3 && spellunlock[1] == false) || (input == 4 && spellunlock[2] == false)) {
                         cout << "Neplatná hodnota" << endl;
                     } else {
                         bool potrebujeCil = true;
@@ -1637,7 +1637,7 @@ if (stagetype == 4) {
                             else spell4(monsterhp3, gold, hracatk, classvyber, hracmana, spellmanacost[classvyber][2], pokracovat, atkbuff, hrachp, hracmaxhp, monster3poisoned);
                         }
                     }
-                } while (input < 1 && input > 3 || (input == 2 && spellunlock[0] == false) || (input == 3 && spellunlock[1] == false) || (input == 4 && spellunlock[2] == false));
+                } while (input < 1 && input > 4 || (input == 2 && spellunlock[0] == false) || (input == 3 && spellunlock[1] == false) || (input == 4 && spellunlock[2] == false));
                 break;
             }
             default:
@@ -1919,7 +1919,7 @@ if (stagetype == 5) {
                     } else if (input == 4 && spellunlock[2] == true) {
                         spell4(minibosshp, gold, hracatk, classvyber, hracmana, spellmanacost[classvyber][2], pokracovat, atkbuff, hrachp, hracmaxhp, monster1poisoned);
                     }
-                } while ((input < 1 && input > 3) || (input == 2 && spellunlock[0] == false) || (input == 3 && spellunlock[1] == false) || (input == 4 && spellunlock[2] == false));
+                } while ((input < 1 && input > 4) || (input == 2 && spellunlock[0] == false) || (input == 3 && spellunlock[1] == false) || (input == 4 && spellunlock[2] == false));
                 break;
             default:
                 cout << "Neplatná hodnota, zadejte hodnotu (1-3)" << endl;
